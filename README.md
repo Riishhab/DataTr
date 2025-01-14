@@ -1,46 +1,54 @@
-#!/bin/bash
+from itertools import combinations
 
-# Usage: ./query_logger.sh <database_name> <sql_file> <log_file>
+# Comparing a list of strings to find the number of common words.
 
-# Validate input arguments
-if [ "$#" -ne 3 ]; then
-    echo "Usage: $0 <database_name> <sql_file> <log_file>"
-    exit 1
-fi
+# function to extract words from a string
+def get_words(string):
+  return set(string.lower().split())
 
-# Assign arguments to variables
-DATABASE_NAME=$1
-SQL_FILE=$2
-LOG_FILE=$3
+def compare_strings(string_list): # list of strings as input 
+    
+    if len(string_list) < 2:
+        raise ValueError("Provide a list with at least two strings to compare.")
 
-# Check if the SQL file exists
-if [ ! -f "$SQL_FILE" ]; then
-    echo "Error: SQL file '$SQL_FILE' does not exist."
-    exit 1
-fi
+    # combinations of string pairs
+    pairs = combinations(enumerate(string_list, start=1), 2)
 
-# Create or clear the log file
-> "$LOG_FILE"
+    # Comparing each pair
+    result_lines = []
+    for (i, str1), (j, str2) in pairs:
+        words1 = get_words(str1)
+        words2 = get_words(str2)
+        count = len(words1.intersection(words2))
+        result_lines.append(f"String {i} vs String {j} : {count}")
 
-# Log the start time
-echo "Query Execution Log" >> "$LOG_FILE"
-echo "-------------------" >> "$LOG_FILE"
-echo "Execution started at: $(date)" >> "$LOG_FILE"
-echo >> "$LOG_FILE"
+    return "\n".join(result_lines)
 
-# Execute the query and append the result to the log file
-echo "Running query from '$SQL_FILE' on database '$DATABASE_NAME'..." >> "$LOG_FILE"
+# main
+strings = [
+    "The quick brown fox jumps over the lazy dog",
+    "The dog barked at the quick brown fox",
+    "A lazy cat sleeps all day"
+]
 
-if mysql -u username -p password "$DATABASE_NAME" < "$SQL_FILE" >> "$LOG_FILE" 2>&1; then
-    echo "Query executed successfully." >> "$LOG_FILE"
-else
-    echo "Error occurred while executing the query." >> "$LOG_FILE"
-fi
+result = compare_strings(strings)
+print(result)
 
-# Log the end time
-echo >> "$LOG_FILE"
-echo "Execution ended at: $(date)" >> "$LOG_FILE"
 
-# Notify the user
-echo "Query execution log saved to '$LOG_FILE'."
-every year old 
+str1 = "Hello St1 itrs tech"
+str2 = "Hello St2 app dynamics tech"
+str3 = "Hello St3 geneos by itrs tech"
+
+print(str1)
+print(str2)
+print(str3)
+
+str_list = [str1, str2, str3]
+
+pairs = combinations(enumerate(str_list, start=1), 2)
+
+print(list(pairs))
+
+print(get_words(str1))
+
+print(compare_strings(str_list))
